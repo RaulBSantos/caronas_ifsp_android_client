@@ -45,19 +45,16 @@
             android:name=".UserRegisterActivity"
             android:label="@string/title_activity_user_register"></activity>
         <activity android:name=".LoginActivity">
-
-        </activity>
-        <activity
-            android:name=".LoginDefaultActivity"
-            android:label="@string/title_activity_login_default" />
-        <activity
-            android:name=".RegisterRidesActivity"
-            android:label="@string/title_activity_rides_register">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".RegisterRidesActivity"
+            android:label="@string/title_activity_rides_register">
+
         </activity>
         <activity
             android:name=".RegisterRoutesActivity"
