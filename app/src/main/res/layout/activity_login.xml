@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="projetocaronas.tcc.ifsp.br.projetocarona.LoginActivity"
+    android:clickable="true"
+    android:onClick="hideKeyboardLogin">
+
+
+    <ImageView
+        android:id="@+id/logo_carona_login_img"
+        android:src="@drawable/logo_carona"
+        android:layout_width="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true" />
+
+    <EditText
+        android:id="@+id/record_login_edit_text"
+        android:layout_width="@dimen/edit_text_user_width"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:inputType="number"
+        android:gravity="center_vertical"
+        android:maxLength="8"
+        android:singleLine="true"
+        android:hint="@string/record"
+        android:textColorHint="@color/white"
+        android:layout_below="@+id/logo_carona_login_img"
+        android:layout_centerInParent="true"/>
+
+    <EditText
+        android:id="@+id/password_login_edit_text"
+        android:layout_width="@dimen/edit_text_user_width"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/record_login_edit_text"
+        android:layout_centerHorizontal="true"
+        android:inputType="textPassword"
+        android:singleLine="true"
+        android:gravity="center_vertical"
+
+        android:hint="@string/password"
+        android:textColorHint="@color/white"/>
+
+    <LinearLayout
+        android:layout_width="@dimen/edit_text_user_width"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/password_login_edit_text"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:id="@+id/buttonQuit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/quit"
+            android:background="@color/buttonCommom"/>
+
+        <Button
+            android:id="@+id/buttonLogin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+
+            android:text="@string/enter"
+
+            android:onClick=""
+            android:background="@color/buttonOk" />
+    </LinearLayout>
+
+
+
+
+
+</RelativeLayout>

@@ -1,0 +1,27 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="minimal_vertical_margin">16dp</dimen>
+    <dimen name="minimal_horizontal_margin">16dp</dimen>
+    <dimen name="minimal_padding">8dp</dimen>
+    <dimen name="form_vertical_margin">80dp</dimen>
+    <dimen name="edit_text_user_width">200dp</dimen>
+    <dimen name="edit_text_height">40dp</dimen>
+    <dimen name="edit_text_small_height">32dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+    <!--<dimen name="scroll_view_search_route">140dp</dimen> -->
+
+    <!-- Parâmetros customizados-->
+    <dimen name="two_digits">32dp</dimen>
+    <dimen name="to_text">27dp</dimen>
+    <dimen name="large_button">120dp</dimen>
+    <dimen name="scroll_view_search_route">190dp</dimen>
+    <dimen name="edit_text_search_route">219dp</dimen>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="nav_header_vertical_spacing">16dp</dimen>
+    <dimen name="nav_header_height">160dp</dimen>
+
+</resources>
+
+

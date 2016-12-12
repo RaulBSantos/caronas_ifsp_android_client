@@ -1,0 +1,214 @@
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    tools:context="projetocaronas.tcc.ifsp.br.projetocarona.RegisterRoutesActivity">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="@dimen/scroll_view_search_route"
+        android:layout_weight="2"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/minimal_padding"
+            android:background="@color/background_material_light">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:animationCache="false"
+                android:layout_marginLeft="10dp"
+                android:background="@color/background_material_light">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:textColor="@color/white"
+                    android:text="@string/title_activity_register_routes"
+                    android:textSize="20dp"
+                    android:textStyle="bold"
+                    android:textAlignment="center"
+                    android:background="@color/background_material_light" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_search_departure_place"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="@dimen/minimal_padding"
+                android:background="@color/background_material_light"
+                xmlns:android="http://schemas.android.com/apk/res/android">
+
+                <TextView
+                    android:id="@+id/text_view_departure_place"
+                    android:layout_width="@dimen/to_text"
+                    android:layout_height="@dimen/edit_text_small_height"
+                    android:layout_weight="1"
+                    android:text="@string/from"/>
+                <EditText
+                    android:layout_width="@dimen/edit_text_search_route"
+                    android:layout_height="@dimen/edit_text_small_height"
+                    android:id="@+id/edit_text_departure_place"
+                    android:layout_weight="4"
+                    android:foregroundGravity="left"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:hint="Pesquise..."
+                    android:background="@color/white" />
+
+                <Button
+                    android:id="@+id/button_add_intermediate_place"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="46dp"
+                    android:layout_height="@dimen/edit_text_small_height"
+                    android:text="@string/plus"
+                    android:layout_weight="2"
+                    android:foregroundGravity="right"
+                    android:background="@color/buttonOk"
+                    android:layout_marginLeft="@dimen/minimal_padding"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_search_intermediate_place"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="@dimen/minimal_padding"
+                android:background="@color/background_material_light"
+                xmlns:android="http://schemas.android.com/apk/res/android">
+
+                <TextView
+                    android:id="@+id/text_view_intermediate_place"
+                    android:layout_width="@dimen/to_text"
+                    android:layout_height="@dimen/edit_text_small_height"
+                    android:layout_weight="1"
+                    android:text="@string/by"/>
+
+                <EditText
+                    android:id="@+id/edit_text_intermediate_place"
+                    android:visibility="gone"
+                    android:layout_width="@dimen/edit_text_search_route"
+                    android:layout_height="@dimen/edit_text_small_height"
+                    android:foregroundGravity="left"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:hint="Pesquise..."
+                    android:layout_weight="4"
+                    android:background="@color/white" />
+
+
+                <Button
+                    android:id="@+id/button_remove_intermediate_place"
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="46dp"
+                    android:layout_height="@dimen/edit_text_small_height"
+                    android:text="@string/exclude"
+                    android:layout_weight="2"
+                    android:foregroundGravity="right"
+                    android:background="@color/buttonCommom"
+                    android:layout_marginLeft="@dimen/minimal_padding"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linear_search_destination_place"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_margin="@dimen/minimal_padding"
+                android:background="@color/background_material_light"
+                xmlns:android="http://schemas.android.com/apk/res/android">
+
+                <TextView
+                    android:id="@+id/text_view_destination_place"
+                    android:layout_width="@dimen/to_text"
+                    android:layout_height="@dimen/edit_text_small_height"
+                    android:layout_weight="1"
+                    android:text="@string/to"/>
+                <EditText
+                    android:layout_width="@dimen/edit_text_search_route"
+                    android:layout_height="@dimen/edit_text_small_height"
+                    android:id="@+id/edit_text_destination_place"
+                    android:foregroundGravity="left"
+                    android:singleLine="true"
+                    android:textColor="@color/black"
+                    android:layout_weight="4"
+                    android:hint="Pesquise..."
+                    android:background="@color/white" />
+
+                <!-- Button invisível, criado para manter o layout da tela, não faz nada-->
+                <Button
+                    style="?android:attr/buttonStyleSmall"
+                    android:layout_width="46dp"
+                    android:layout_height="@dimen/edit_text_small_height"
+                    android:layout_weight="2"
+                    android:id="@+id/voidButton"
+                    android:foregroundGravity="right"
+                    android:layout_marginLeft="@dimen/minimal_padding"
+                    android:visibility="invisible"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </ScrollView>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="12"
+        android:layout_below="@+id/linear_search_route">
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="12"
+            tools:context="projetocaronas.tcc.ifsp.br.projetocarona.RegisterRoutesActivity">
+
+            <Button
+                android:id="@+id/back_to_ride_register"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/back"
+                android:textColor="@color/white"
+                android:onClick="onBackButton"
+                android:layout_weight="1"
+                android:layout_gravity="left|bottom"
+                android:layout_margin="@dimen/minimal_padding"
+                android:alpha="0.7"
+                android:background="@color/buttonCommom" />
+
+            <Button
+                android:id="@+id/set_route_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_save"
+                android:textColor="@color/white"
+                android:onClick="onSaveLocation"
+                android:layout_weight="1"
+                android:layout_gravity="right|bottom"
+                android:layout_margin="@dimen/minimal_padding"
+                android:alpha="0.7"
+                android:background="@color/buttonOk" />
+
+            </fragment>
+    </RelativeLayout>
+</LinearLayout>
+
+
+

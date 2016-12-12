@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".RegisterRidesActivity"
+    android:clickable="true"
+    android:onClick="hideKeyboardRegisterRides">
+
+    <LinearLayout
+        android:id="@+id/linear_check_boxes_week"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/edit_text_height"
+        android:layout_centerHorizontal="true">
+        <TextView
+            android:id="@+id/text_days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="@string/days"
+            />
+        <CheckBox
+            android:id="@+id/check_mon"
+            android:contentDescription="@string/week_mon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"
+            android:text="@string/monday" />
+
+        <CheckBox
+            android:id="@+id/check_tue"
+            android:contentDescription="@string/week_tue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/tuesday"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"/>
+        <CheckBox
+            android:id="@+id/check_wed"
+            android:contentDescription="@string/week_wed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/wednesday"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"/>
+        <CheckBox
+            android:id="@+id/check_thu"
+            android:contentDescription="@string/week_thu"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/thursday"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"/>
+        <CheckBox
+            android:id="@+id/check_fri"
+            android:contentDescription="@string/week_fri"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/friday"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"/>
+        <CheckBox
+            android:id="@+id/check_sat"
+            android:contentDescription="@string/week_sat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/saturday"
+            android:textColor="@color/white"
+            android:buttonTint="@color/white"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linear_direction"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/edit_text_height"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:layout_below="@+id/linear_check_boxes_week">
+
+        <TextView
+            android:id="@+id/text_direction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="@string/direction"
+            android:paddingTop="7dp"/>
+        <RadioGroup
+            android:id="@+id/radio_group_way"
+            android:checkedButton="@+id/radio_way_go_and_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <RadioButton
+                android:id="@+id/radio_way_go_and_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white"
+                android:text="Ida e volta"/>
+
+            <RadioButton
+                android:id="@+id/radio_way_go"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white"
+                android:text="Ida"/>
+
+            <RadioButton
+                android:id="@+id/radio_way_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:buttonTint="@color/white"
+
+                android:text="Volta" />
+
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_ride_time"
+        android:layout_width="wrap_content"
+        android:layout_height="@dimen/edit_text_height"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/linear_direction">
+
+        <TextView
+            android:id="@+id/label_go_time"
+            android:labelFor="@string/go_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/go_time"/>
+        <EditText
+            android:id="@+id/edit_text_go_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/time_mask"
+            android:inputType="none"
+            android:focusable="false"/>
+
+        <TextView
+            android:id="@+id/label_back_time"
+            android:labelFor="@string/back_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/back_time"/>
+        <EditText
+            android:id="@+id/edit_text_back_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:hint="@string/time_mask"
+            android:inputType="none"
+            android:focusable="false"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linear_vacancy"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/linear_ride_time">
+
+        <TextView
+            android:id="@+id/label_go_vacancy"
+            android:layout_width="wrap_content"
+            android:labelFor="@string/go_vacancy"
+            android:layout_height="@dimen/edit_text_height"
+            android:text="@string/go_vacancy"/>
+        <EditText
+            android:id="@+id/edit_text_go_vacancy"
+            android:layout_width="@dimen/two_digits"
+            android:layout_height="wrap_content"
+            android:maxLength="2"
+            android:inputType="number"/>
+
+        <TextView
+            android:id="@+id/label_back_vacancy"
+            android:layout_width="wrap_content"
+            android:labelFor="@string/go_vacancy"
+            android:layout_height="@dimen/edit_text_height"
+            android:text="@string/back_vacancy"/>
+        <EditText
+            android:id="@+id/edit_text_back_vacancy"
+            android:layout_width="@dimen/two_digits"
+            android:layout_height="wrap_content"
+            android:maxLength="2"
+            android:inputType="number"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/linear_route"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="@dimen/minimal_padding"
+        android:layout_below="@+id/linear_vacancy">
+
+        <Button
+            android:id="@+id/button_edit_route"
+            android:layout_width="@dimen/large_button"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:onClick="editRoute"
+            android:text="@string/edit_route"
+            android:background="@color/buttonCommom"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linear_save_ride"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:paddingTop="@dimen/minimal_padding"
+        android:layout_below="@+id/linear_route">
+        
+        <Button
+            android:id="@+id/button_save_ride"
+            android:layout_width="@dimen/large_button"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:text="@string/save_ride"
+            android:onClick="onSaveRide"
+            android:background="@color/buttonOk"/>
+
+    </LinearLayout>
+
+
+</RelativeLayout>

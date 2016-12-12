@@ -1,0 +1,111 @@
+<LinearLayout xmlns:tools="http://schemas.android.com/tools"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_weight="12"
+    tools:context="projetocaronas.tcc.ifsp.br.projetocarona.MapsActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:animationCache="false"
+        android:layout_marginLeft="10dp"
+        android:background="@color/background_material_light">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textColor="@color/white"
+            android:text="@string/address_register"
+            android:textSize="20dp"
+            android:textStyle="bold"
+            android:textAlignment="center"
+            android:background="@color/background_material_light" />
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1"
+        android:layout_margin="@dimen/minimal_padding"
+        android:background="@color/background_material_light">
+
+        <EditText
+            android:layout_width="260dp"
+            android:layout_height="@dimen/edit_text_height"
+            android:id="@+id/editTextSearch"
+            android:layout_weight="4"
+            android:foregroundGravity="left"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            android:hint="Pesquise..."
+            android:background="@color/white" />
+
+        <Button
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="86dp"
+            android:layout_height="wrap_content"
+            android:text="@string/button_text_find"
+            android:layout_weight="1"
+            android:id="@+id/buttonSearch"
+            android:onClick="onSearch"
+            android:foregroundGravity="right"
+            android:background="@color/buttonOk"
+            android:layout_marginLeft="@dimen/minimal_padding"
+            android:textColor="@color/white" />
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="12"
+        android:onClick="hideKeyboardFromUtils">
+
+        <fragment
+            tools:context="projetocaronas.tcc.ifsp.br.projetocarona.MapsActivity"
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_weight="12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+
+            <Button
+                android:id="@+id/backToUserRegister"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/back"
+                android:textColor="@color/white"
+                android:onClick="onBackButton"
+                android:layout_weight="1"
+                android:layout_gravity="left|bottom"
+                android:layout_margin="@dimen/minimal_padding"
+                android:alpha="0.7"
+                android:background="@color/buttonCommom" />
+
+            <Button
+                android:id="@+id/setLocationOk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/button_save"
+                android:textColor="@color/white"
+                android:onClick="onSaveLocation"
+                android:layout_weight="1"
+                android:layout_gravity="right|bottom"
+                android:layout_margin="@dimen/minimal_padding"
+                android:alpha="0.7"
+                android:background="@color/buttonOk" />
+
+        </fragment>
+
+
+    </RelativeLayout>
+
+
+
+
+</LinearLayout>

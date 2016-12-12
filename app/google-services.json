@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "996419018266",
+    "firebase_url": "https://caronasfinal.firebaseio.com",
+    "project_id": "caronasfinal",
+    "storage_bucket": "caronasfinal.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:996419018266:android:6275e03314067a49",
+        "android_client_info": {
+          "package_name": "projetocaronas.tcc.ifsp.br.projetocarona"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "996419018266-h8a49d28rq93j9kbcmkj5scfdmoqo8sc.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCkOEKMms2kqRumODmMwksz3RrhBy-EZOQ"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

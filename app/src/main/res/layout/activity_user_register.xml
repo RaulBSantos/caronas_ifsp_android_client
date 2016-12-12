@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="projetocaronas.tcc.ifsp.br.projetocarona.UserRegisterActivity"
+    android:clickable="true"
+    android:onClick="hideKeyboardUserRegister">
+
+    <ImageView
+        android:id="@+id/logo_carona_img"
+        android:src="@drawable/logo_carona"
+        android:layout_width="80dp"
+        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content"
+        android:scaleType="fitXY"
+        android:adjustViewBounds="true"/>
+
+    <EditText
+        android:id="@+id/edit_text_user_name"
+        android:layout_width="@dimen/edit_text_user_width"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:hint="@string/user_name"
+        android:singleLine="true"
+        android:layout_below="@+id/logo_carona_img"
+        android:textColorHint="@color/white" />
+
+    <!-- minLines its working as minLength-->
+    <EditText
+        android:id="@+id/edit_text_phone"
+        android:layout_width="@dimen/edit_text_user_width"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_text_user_name"
+        android:layout_centerHorizontal="true"
+        android:inputType="phone"
+        android:singleLine="true"
+        android:maxLength="14"
+        android:minEms="13"
+        android:gravity="center_vertical"
+        android:hint="@string/phone"
+        android:textColorHint="@color/white" />
+
+    <EditText
+        android:id="@+id/edit_text_email"
+        android:layout_width="@dimen/edit_text_user_width"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:inputType="textEmailAddress"
+        android:singleLine="true"
+        android:gravity="center_vertical"
+
+        android:hint="@string/email"
+        android:textColorHint="@color/white"
+        android:layout_below="@+id/edit_text_phone" />
+
+    <LinearLayout
+        android:id="@+id/linear_check_give_ride"
+        android:layout_width="@dimen/edit_text_user_width"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_text_email"
+        android:layout_centerHorizontal="true">
+
+
+        <TextView
+            android:id="@+id/will_give_ride"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/will_give_ride"
+            android:textColor="@color/white" />
+
+        <CheckBox
+            android:id="@+id/can_give_ride"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="40dp"
+            android:buttonTint="#ffffff" />
+
+    </LinearLayout>
+    <!-- <EditText   Colocar no cadastro de caronas
+        android:id="@+id/edit_text_vacancy"
+        android:layout_width="@dimen/edit_text_user_width"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linear_check_give_ride"
+        android:layout_centerHorizontal="true"
+        android:inputType="number"
+        android:gravity="center_vertical"
+        android:maxLength="2"
+        android:singleLine="true"
+        android:hint="@string/vacancy"
+        android:textColorHint="@color/white"
+        android:visibility="invisible"/>
+      -->
+
+    <LinearLayout
+        android:layout_width="@dimen/edit_text_user_width"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/linear_check_give_ride"
+        android:layout_centerHorizontal="true">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+
+            android:text="@string/back"
+
+            android:background="@color/buttonCommom"
+            android:onClick="backToLoginActivity" />
+
+        <Button
+            android:id="@+id/buttonNext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+
+            android:text="@string/next"
+
+            android:onClick="processUserForm"
+            android:background="@color/buttonOk" />
+    </LinearLayout>
+
+
+    <!--<Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/"
+        android:gravity="center"
+        android:layout_below="@+id/edit_text_password"
+        android:layout_centerHorizontal="true"
+        /> -->
+
+
+</RelativeLayout>
