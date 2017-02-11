@@ -20,8 +20,7 @@ import java.util.List;
  * Created by Raul on 26/05/2016.
  */
 public class AndroidUtilsCaronas {
-    public final static String SERVER_PREFIX_CONTEXT = "http://ec2-35-164-212-117.us-west-2.compute.amazonaws.com:8080/caronas";
-//public final static String SERVER_PREFIX_CONTEXT = "https://jpldelvecchio.no-ip.org:8091";
+    public final static String SERVER_PREFIX_CONTEXT = "https://caronas-ifsp.tk:8080/caronas";
     // Armazena o prontuário usado para login no dispositivo
     public static String userRecord = "";
 
