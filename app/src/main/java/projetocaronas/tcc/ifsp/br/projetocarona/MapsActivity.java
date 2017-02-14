@@ -4,12 +4,20 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
+import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.net.Uri;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -36,11 +44,21 @@ import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionReceiveJSONTask;
 import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionSendJSONTask;
 import projetocaronas.tcc.ifsp.br.projetocarona.utils.AndroidUtilsCaronas;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ConnectionReceiveJSONTask.OnJsonTransmitionCompleted {
+import static android.content.Context.LOCATION_SERVICE;
+import static android.graphics.Color.YELLOW;
+
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ConnectionReceiveJSONTask.OnJsonTransmitionCompleted, LocationListener {
     private LatLng latLng = null;
     private GoogleMap mMap;
     private User userToRegister = null;
     private JSONArray usersData = null;
+    private boolean gotUserPosition = false; //FIXME Precisa ser estático? Em quais situações será instanciada uma nova classe?
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,6 +72,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -81,6 +102,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             return;
         }
         mMap.setMyLocationEnabled(true);
+
+        // Forces map to MyLocation
+        LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
+        Criteria criteria = new Criteria();
+        String bestProvider = locationManager.getBestProvider(criteria, true);
+        Location location = locationManager.getLastKnownLocation(bestProvider);
+        if (location != null) {
+            onLocationChanged(location);
+        }
+        locationManager.requestLocationUpdates(bestProvider, 20000, 0, this);
+
+
         // Click event of get current location
         mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
@@ -97,7 +130,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         mMap.addMarker(new MarkerOptions().position(latLng).title("Seu local"));
                         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
                         mMap.setOnCameraChangeListener(null);//disable
-
+                        fillAddress(latitide, longitude);
                         // Fill markers
                         populateMapWithUsers(usersData);
                     }
@@ -107,7 +140,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         });
         // Fill map with data of users
-        new ConnectionReceiveJSONTask(this,MapsActivity.this, "/getAllUsersAndPools").execute();
+        new ConnectionReceiveJSONTask(this, MapsActivity.this, "/getAllUsersAndPools").execute();
 
         // Event of click on Info Window each marker (User or Ride)
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
@@ -119,7 +152,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    public void onSearch(View view){
+    public void onSearch(View view) {
         hideKeyboardFromUtils(view);
 
         EditText locationEditText = (EditText) findViewById(R.id.editTextSearch);
@@ -127,18 +160,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         mMap.clear(); // Clear All Markers and other stuff
 
-        if(location != null && !location.isEmpty()){
+        if (location != null && !location.isEmpty()) {
 
             Geocoder geocoder = new Geocoder(this);
             try {
                 List<Address> addressList = geocoder.getFromLocationName(location, 1);
-                if(addressList.size() > 0) {
+                if (addressList.size() > 0) {
                     Address address = addressList.get(0);
 
                     latLng = new LatLng(address.getLatitude(), address.getLongitude());
                     mMap.addMarker(new MarkerOptions().position(latLng).title("Seu local"));
                     mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(latLng, 15));
-                }else{
+                } else {
                     Toast.makeText(MapsActivity.this, "O endereço informado não foi encontrado", Toast.LENGTH_SHORT).show();
                 }
 
@@ -148,18 +181,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    public void hideKeyboardFromUtils(View view){
+    public void hideKeyboardFromUtils(View view) {
         AndroidUtilsCaronas.hideKeyboard(this);
     }
 
-    public void onSaveLocation(View view){
-        if (latLng != null){
+    public void onSaveLocation(View view) {
+        if (latLng != null) {
 
             JSONObject postParameters = this.userToRegister.toJSONObject();
 
             try {
-                postParameters.put("latitude",latLng.latitude);
-                postParameters.put("longitude",latLng.longitude);
+                postParameters.put("latitude", latLng.latitude);
+                postParameters.put("longitude", latLng.longitude);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -167,12 +200,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Toast.makeText(this, "Cadastro realizado, localização : Latitude: " + latLng.latitude + " Longitude: " + latLng.longitude, Toast.LENGTH_LONG).show();
             // Envia os dados, chamando a prócima activity de cadastro de caronas
             new ConnectionSendJSONTask(MapsActivity.this, new RegisterRidesActivity(), "/register_user_and_coordinates").execute(postParameters);
-        }else{
+        } else {
             Toast.makeText(this, "Cannot read location!", Toast.LENGTH_LONG).show();
         }
     }
 
-    public void onBackButton(View view){
+    public void onBackButton(View view) {
         Intent intent = new Intent(this, UserRegisterActivity.class);
         intent.putExtra("userToRegister", userToRegister);
         startActivity(intent);
@@ -181,16 +214,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onTrasmitionCompleted(JSONArray jsonArray) {
         // Prevenir null pointer exception
-        if(jsonArray == null) jsonArray = new JSONArray();
+        if (jsonArray == null) jsonArray = new JSONArray();
         // Fill with location markers
         populateMapWithUsers(jsonArray);
         Toast.makeText(this, "Encontrados: " + jsonArray.length() + " usuários", Toast.LENGTH_LONG).show();
         usersData = jsonArray;
     }
 
-    public void populateMapWithUsers(JSONArray usersData){
+    public void populateMapWithUsers(JSONArray usersData) {
         boolean canUserGiveRide = checkUserCanGiveRide();
-        for (int i = 0 ; i < usersData.length() ; i++){
+        for (int i = 0; i < usersData.length(); i++) {
             try {
                 JSONObject user = (JSONObject) usersData.get(i);
 
@@ -199,15 +232,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 int vacancy = 0; //FIXME Só para teste, pegar da carona do usuário (ou listar as caronas separado, tirando o campo vagas?)
 
 
-
-                LatLng userLatLng = new LatLng((Double)user.getJSONObject("location").get("latitude"), (Double)user.getJSONObject("location").get("longitude"));
-                if(giveRide){
-                    if(vacancy > 0) {
-                        mMap.addMarker(new MarkerOptions().position(userLatLng).title(user.get("name").toString()).snippet("Vagas : "+vacancy +" - Pedir carona").icon(BitmapDescriptorFactory.fromResource(R.drawable.car_vacancy_marker)));
-                    }else{
+                LatLng userLatLng = new LatLng((Double) user.getJSONObject("location").get("latitude"), (Double) user.getJSONObject("location").get("longitude"));
+                if (giveRide) {
+                    if (vacancy > 0) {
+                        mMap.addMarker(new MarkerOptions().position(userLatLng).title(user.get("name").toString()).snippet("Vagas : " + vacancy + " - Pedir carona").icon(BitmapDescriptorFactory.fromResource(R.drawable.car_vacancy_marker)));
+                    } else {
                         mMap.addMarker(new MarkerOptions().position(userLatLng).title(user.get("name").toString()).snippet("Lotado").icon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker)));
                     }
-                }else{
+                } else {
                     mMap.addMarker(new MarkerOptions().position(userLatLng).title(user.get("name").toString()).snippet(canUserGiveRide ? "Oferecer carona" : "Ver perfil").icon(BitmapDescriptorFactory.fromResource(R.drawable.man_marker)));
                 }
             } catch (JSONException e) {
@@ -219,9 +251,97 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private boolean checkUserCanGiveRide() {
-        if(this.userToRegister != null){
+        if (this.userToRegister != null) {
             return this.userToRegister.isCanGiveRide();
         }
         return false;
+    }
+
+    @Override
+    public void onProviderEnabled(String s) {
+        // Para utilizar LocationListener
+    }
+
+    @Override
+    public void onProviderDisabled(String s) {
+        // Para utilizar LocationListener
+    }
+
+    @Override
+    public void onStatusChanged(String s, int i, Bundle bundle) {
+        // Para utilizar LocationListener
+    }
+
+    /**
+     * Get the current user's current position
+     *
+     * @param location
+     */
+    @Override
+    public void onLocationChanged(Location location) {
+        if(this.gotUserPosition == false) {
+            this.gotUserPosition = true; // Run once
+            // Sets marker on current postion
+            double latitude = location.getLatitude();
+            double longitude = location.getLongitude();
+            LatLng latLng = new LatLng(latitude, longitude);
+            this.mMap.addMarker(new MarkerOptions().position(latLng)); //TODO Refactor this. Put in fillAddress Method too
+
+            this.mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
+            this.mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
+            fillAddress(latitude, longitude);
+
+        }
+    }
+
+    private void fillAddress(double latitude, double longitude) {
+        try {
+            // Fills the address information
+            Geocoder geocoder = new Geocoder(this);
+            List<Address> addressList = geocoder.getFromLocation(latitude, longitude, 1);
+            Address address = addressList.get(0);
+            Toast.makeText(MapsActivity.this, "Current address - Street: " + address.getAddressLine(0), Toast.LENGTH_SHORT).show();
+            EditText locationEditText = (EditText) findViewById(R.id.editTextSearch);
+            locationEditText.setText(address.getAddressLine(0)+", "+ address.getLocality() +" - "+address.getAdminArea()+", "+address.getCountryName());
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Maps Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 }
