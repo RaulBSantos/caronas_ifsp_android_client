@@ -1,8 +1,8 @@
 package projetocaronas.tcc.ifsp.br.projetocarona;
 
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,12 +11,13 @@ import android.widget.Toast;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import projetocaronas.tcc.ifsp.br.projetocarona.messaging.MyFirebaseInstanceIdService;
-import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionSendJSONTask;
+import projetocaronas.tcc.ifsp.br.projetocarona.entities.User;
+import projetocaronas.tcc.ifsp.br.projetocarona.session.ManageUserSession;
+import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionSendAndReceiveJSONTask;
 import projetocaronas.tcc.ifsp.br.projetocarona.utils.AndroidUtilsCaronas;
 import projetocaronas.tcc.ifsp.br.projetocarona.utils.Mask;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements ConnectionSendAndReceiveJSONTask.OnJsonTransmitionDone {
 
 
 
@@ -64,13 +65,10 @@ public class LoginActivity extends AppCompatActivity {
                         postParameters.put("record", recordToLogin.getText().toString());
                         postParameters.put("password", passwordToLogin.getText().toString());
 
-                        // Adiciona o prontuário usado para login
-                        AndroidUtilsCaronas.userRecord = postParameters.getString("record");
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-
-                    new ConnectionSendJSONTask(LoginActivity.this, new MapsActivity(), "/login").execute(postParameters);
+                    new ConnectionSendAndReceiveJSONTask(LoginActivity.this, LoginActivity.this, new MapsActivity(), "/login").execute(postParameters);
                 }else{
                     Toast.makeText(LoginActivity.this,getResources().getString(R.string.check_connection), Toast.LENGTH_LONG).show();
                 }
@@ -102,5 +100,21 @@ public class LoginActivity extends AppCompatActivity {
         return AndroidUtilsCaronas.checkHasInternetConnection(context);
     }
 
+
+    @Override
+    public void onJsonReceived(JSONObject jsonResponse) {
+        ManageUserSession userSession = new ManageUserSession();
+        JSONObject jsonUser = null;
+        try {
+            // Extrai o objeto Usuário do JSON
+            jsonUser = (JSONObject) jsonResponse.get("user");
+            User sessionUser =  User.createUserFromJSON(jsonUser);
+            // Salva dados do usuário logado
+            userSession.saveSessionUser(sessionUser);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+    }
 
 }

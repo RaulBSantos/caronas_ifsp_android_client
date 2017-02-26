@@ -101,6 +101,39 @@ public class User implements Serializable, UserBuilder {
         this.firebaseId = fireBaseId;
         return this;
     }
+    // Dada uma estrutura de JSON, cria um novo usuário
+    public static User createUserFromJSON(JSONObject jsonUser){
+        User user = new User();
+        try {
+            if (jsonUser.has("name")){
+                String name = (String) jsonUser.get("name");
+                user.withName(name);
+            }
 
+            if (jsonUser.has("record")) {
+                String record = (String) jsonUser.get("record");
+                user.withRecord(record);
+            }
+
+            if (jsonUser.has("canGiveRide")){
+                Boolean canGiveRide = (Boolean) jsonUser.get("canGiveRide");
+                user.thatCanGiveRide(canGiveRide);
+            }
+
+            if (jsonUser.has("phone")) {
+                String phone = (String) jsonUser.get("phone");
+                user.withPhone(phone);
+            }
+
+            if (jsonUser.has("email")) {
+                String email = (String) jsonUser.get("email");
+                user.withPhone(email);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return user;
+    }
 
 }
