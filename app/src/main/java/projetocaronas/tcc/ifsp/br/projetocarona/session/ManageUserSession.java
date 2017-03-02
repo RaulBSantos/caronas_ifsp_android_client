@@ -15,6 +15,14 @@ public class ManageUserSession {
     public static void saveSessionUser(User sessionUser) {
         ManageUserSession.sessionUser = sessionUser;
     }
+    // Checa se
+    public static boolean isThisUserLogged(User user){
+        User loggedUser = ManageUserSession.getSessionUser();
+        if (loggedUser != null){
+            return loggedUser.getRecord().equals(user.getRecord());
+        }
+        return false;
+    }
 
     public static User getSessionUser() {
         return sessionUser;

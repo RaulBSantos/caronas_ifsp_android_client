@@ -127,7 +127,7 @@ public class User implements Serializable, UserBuilder {
 
             if (jsonUser.has("email")) {
                 String email = (String) jsonUser.get("email");
-                user.withPhone(email);
+                user.withEmail(email);
             }
 
         } catch (JSONException e) {

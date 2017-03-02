@@ -32,10 +32,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionSendAn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Limpa o prontuário utilizado
-        AndroidUtilsCaronas.userRecord = "";
-
-
         //FIXME Teste do Firebase
 //        MyFirebaseMessagingService teste = new MyFirebaseMessagingService();
 

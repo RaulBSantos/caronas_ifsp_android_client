@@ -16,6 +16,7 @@ import java.util.List;
 
 import projetocaronas.tcc.ifsp.br.projetocarona.entities.User;
 import projetocaronas.tcc.ifsp.br.projetocarona.messaging.MyFirebaseInstanceIdService;
+import projetocaronas.tcc.ifsp.br.projetocarona.session.ManageUserSession;
 import projetocaronas.tcc.ifsp.br.projetocarona.utils.AndroidUtilsCaronas;
 import projetocaronas.tcc.ifsp.br.projetocarona.utils.Mask;
 
@@ -74,7 +75,7 @@ public class UserRegisterActivity extends AppCompatActivity {
             User newUser = new User()
                     .withName(fieldName.getText().toString().trim())
                     // Pega o prontuário registrado estaticamente
-                    .withRecord(AndroidUtilsCaronas.userRecord)
+                    .withRecord(ManageUserSession.getSessionUser().getRecord())
                     .withPhone( fieldPhone.getText().toString().trim())
                     .withEmail(fieldEmail.getText().toString().trim())
                     .thatCanGiveRide(fieldGiveRide.isChecked());

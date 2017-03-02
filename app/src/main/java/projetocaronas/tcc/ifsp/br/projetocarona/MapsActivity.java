@@ -10,6 +10,7 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.Build;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.util.List;
 
 import projetocaronas.tcc.ifsp.br.projetocarona.entities.User;
+import projetocaronas.tcc.ifsp.br.projetocarona.session.ManageUserSession;
 import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionReceiveJSONTask;
 import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionSendJSONTask;
 import projetocaronas.tcc.ifsp.br.projetocarona.utils.AndroidUtilsCaronas;
@@ -107,13 +109,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         Criteria criteria = new Criteria();
         String bestProvider = locationManager.getBestProvider(criteria, true);
-        Location location = locationManager.getLastKnownLocation(bestProvider);
-        if (location != null) {
-            onLocationChanged(location);
+        if (bestProvider != null){
+            Location location = locationManager.getLastKnownLocation(bestProvider);
+            if (location != null) {
+                onLocationChanged(location);
+            }
+            locationManager.requestLocationUpdates(bestProvider, 20000, 0, this);
+        }else{
+            Toast.makeText(MapsActivity.this, "Impossivel obter localizaçao", Toast.LENGTH_LONG).show();//TODO  Call activity Confirma carona
         }
-        locationManager.requestLocationUpdates(bestProvider, 20000, 0, this);
 
-
+        //FIXME Caso nao consiga obter localizaçao, sera necessario omitir o botao?
         // Click event of get current location
         mMap.setOnMyLocationButtonClickListener(new GoogleMap.OnMyLocationButtonClickListener() {
             @Override
@@ -217,7 +223,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (jsonArray == null) jsonArray = new JSONArray();
         // Fill with location markers
         populateMapWithUsers(jsonArray);
-        Toast.makeText(this, "Encontrados: " + jsonArray.length() + " usuários", Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Total de usuarios enontrados: " + jsonArray.length() , Toast.LENGTH_LONG).show();
         usersData = jsonArray;
     }
 
@@ -227,10 +233,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             try {
                 JSONObject user = (JSONObject) usersData.get(i);
 
+                if(ManageUserSession.isThisUserLogged(User.createUserFromJSON(user))){
+                    // Não coloca o marcador do próprio usuário
+                    continue;
+                }
                 boolean giveRide = (Boolean) user.get("canGiveRide");
 //                int vacancy = (int) user.get("vacancy");
                 int vacancy = 0; //FIXME Só para teste, pegar da carona do usuário (ou listar as caronas separado, tirando o campo vagas?)
-
 
                 LatLng userLatLng = new LatLng((Double) user.getJSONObject("location").get("latitude"), (Double) user.getJSONObject("location").get("longitude"));
                 if (giveRide) {

@@ -14,6 +14,9 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 import java.util.List;
 
 /**
@@ -21,8 +24,6 @@ import java.util.List;
  */
 public class AndroidUtilsCaronas {
     public final static String SERVER_PREFIX_CONTEXT = "https://caronas-ifsp.tk:8080/caronas";
-    // Armazena o prontuário usado para login no dispositivo
-    public static String userRecord = "";
 
     /**
      * Métodos: validarEditText, DesaparecerTeclado
@@ -81,6 +82,5 @@ public class AndroidUtilsCaronas {
         NetworkInfo activeNetwork = connectivityManager.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
-
 
 }

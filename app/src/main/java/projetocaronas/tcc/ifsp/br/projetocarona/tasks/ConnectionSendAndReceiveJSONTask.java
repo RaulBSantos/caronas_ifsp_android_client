@@ -1,9 +1,11 @@
 package projetocaronas.tcc.ifsp.br.projetocarona.tasks;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.http.HttpResponseCache;
 import android.os.AsyncTask;
 import android.view.View;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -18,6 +20,8 @@ import java.net.URL;
 
 import projetocaronas.tcc.ifsp.br.projetocarona.LoginActivity;
 import projetocaronas.tcc.ifsp.br.projetocarona.MapsActivity;
+import projetocaronas.tcc.ifsp.br.projetocarona.R;
+import projetocaronas.tcc.ifsp.br.projetocarona.UserRegisterActivity;
 import projetocaronas.tcc.ifsp.br.projetocarona.utils.AndroidUtilsCaronas;
 
 /**
@@ -49,7 +53,36 @@ public class ConnectionSendAndReceiveJSONTask extends AsyncTask{
 
     @Override
     protected void onPostExecute(Object jsonObject) {
-        this.mCallback.onJsonReceived( (JSONObject) jsonObject);
+        JSONObject receivedJson = (JSONObject) jsonObject;
+        // Get response code
+        try {
+            int respCode = (int) receivedJson.get("status_code");
+
+            switch (respCode){
+                case HttpURLConnection.HTTP_OK :
+                    if(this.context != null && this.next != null) {
+                        this.mCallback.onJsonReceived(receivedJson);
+                        callNextActivity();
+                    }
+                    break;
+                case HttpURLConnection.HTTP_MOVED_TEMP:
+                    // Caso o usuário deva se cadastrar
+                    if(this.context != null){
+                        this.next = new UserRegisterActivity();
+                        this.mCallback.onJsonReceived(receivedJson);
+                        callNextActivity();
+                    }
+
+                    break;
+                case HttpURLConnection.HTTP_UNAUTHORIZED :
+                    Toast.makeText(this.context, this.context.getResources().getString(R.string.invalid_record_password) + " \tCódigo de resposta: " + respCode, Toast.LENGTH_LONG).show();
+                    break;
+                default:
+                    Toast.makeText(this.context, this.context.getResources().getString(R.string.unavailable_server) + " \tCódigo de resposta: " + respCode, Toast.LENGTH_LONG).show();
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 
     public JSONObject postJSONAndReceiveFromURL(JSONObject jsonToSend){
@@ -92,12 +125,6 @@ public class ConnectionSendAndReceiveJSONTask extends AsyncTask{
             outputStream.flush();
             outputStream.close();
 
-            int statusCode = (int) jsonResponse.get("status_code");
-            // Verifica o código de resposta
-            if (statusCode != 200){
-                return null;
-            }
-
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (IOException e) {
@@ -107,6 +134,11 @@ public class ConnectionSendAndReceiveJSONTask extends AsyncTask{
         }
 
         return  jsonResponse;
+    }
+
+    private void callNextActivity(){
+        Intent intent = new Intent(this.context, this.next.getClass());
+        this.context.startActivity(intent);
     }
 
     // Interface to manage OnComplete Json Transmition
