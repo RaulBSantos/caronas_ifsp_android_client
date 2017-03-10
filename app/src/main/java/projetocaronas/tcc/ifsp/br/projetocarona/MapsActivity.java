@@ -3,6 +3,7 @@ package projetocaronas.tcc.ifsp.br.projetocarona;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -40,6 +41,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import projetocaronas.tcc.ifsp.br.projetocarona.controllers.NotificationController;
 import projetocaronas.tcc.ifsp.br.projetocarona.entities.User;
 import projetocaronas.tcc.ifsp.br.projetocarona.session.ManageUserSession;
 import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionReceiveJSONTask;
@@ -151,7 +153,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                Toast.makeText(MapsActivity.this, "User selected " + marker.getTitle().toString(), Toast.LENGTH_SHORT).show();//TODO  Call activity Confirma carona
+                NotificationController notificationController = new NotificationController();
+                String toOffer = Resources.getSystem().getString(R.string.to_offer);
+                String toRequest = Resources.getSystem().getString(R.string.to_request);
+
+                User origin = ManageUserSession.getSessionUser();
+                User destination = mapAllUsersMarkers.get(marker);
+
+                if (marker.getSnippet().toLowerCase().contains(toOffer)){
+                    notificationController.sendRideOffer(origin, destination);
+                }else if (marker.getSnippet().toLowerCase().contains(toRequest)){
+                    notificationController.sendRideRequest(origin, destination);
+                }
+                Toast.makeText(MapsActivity.this, "Mensagem de : "+origin.getName() +" para "+ destination.getName() + " foi enviada! ", Toast.LENGTH_SHORT).show();//TODO  Call activity Confirma carona
             }
         });
 

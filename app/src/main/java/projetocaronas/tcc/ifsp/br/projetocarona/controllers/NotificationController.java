@@ -5,10 +5,13 @@ import android.provider.Settings;
 
 import org.json.JSONObject;
 
+import projetocaronas.tcc.ifsp.br.projetocarona.LoginActivity;
+import projetocaronas.tcc.ifsp.br.projetocarona.MapsActivity;
 import projetocaronas.tcc.ifsp.br.projetocarona.R;
 import projetocaronas.tcc.ifsp.br.projetocarona.entities.RideNotification;
 import projetocaronas.tcc.ifsp.br.projetocarona.entities.User;
 import projetocaronas.tcc.ifsp.br.projetocarona.enums.RIDE_ACTION;
+import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionSendAndReceiveJSONTask;
 import projetocaronas.tcc.ifsp.br.projetocarona.utils.AndroidUtilsCaronas;
 import projetocaronas.tcc.ifsp.br.projetocarona.utils.JsonUtils;
 
@@ -17,7 +20,7 @@ import projetocaronas.tcc.ifsp.br.projetocarona.utils.JsonUtils;
  */
 
 public class NotificationController {
-    private final String NOTIFICATION_URL = AndroidUtilsCaronas.SERVER_PREFIX_CONTEXT + "/notification";
+    private final String NOTIFICATION_FULL_URL = AndroidUtilsCaronas.SERVER_PREFIX_CONTEXT + "/notification";
 
     public void sendRideRequest(User origin, User destination){
         RideNotification notification = new RideNotification(origin, RIDE_ACTION.REQUEST, destination);
@@ -34,6 +37,7 @@ public class NotificationController {
         notification.setMessage(message);
         JSONObject json = JsonUtils.convertToJson(notification);
         //FIXME Envia a notificação para a URL de OFERTA de carona
+        new ConnectionSendAndReceiveJSONTask(LoginActivity.this, LoginActivity.this, new MapsActivity(), "/login").execute(postParameters);
 
     }
 
