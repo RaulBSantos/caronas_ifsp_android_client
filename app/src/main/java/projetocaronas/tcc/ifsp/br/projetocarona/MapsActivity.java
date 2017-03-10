@@ -10,10 +10,12 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Build;
+import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
+import android.view.View;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
@@ -29,25 +31,20 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import android.view.View;
-import android.widget.EditText;
-import android.widget.Toast;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import projetocaronas.tcc.ifsp.br.projetocarona.entities.User;
 import projetocaronas.tcc.ifsp.br.projetocarona.session.ManageUserSession;
 import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionReceiveJSONTask;
 import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionSendJSONTask;
 import projetocaronas.tcc.ifsp.br.projetocarona.utils.AndroidUtilsCaronas;
-
-import static android.content.Context.LOCATION_SERVICE;
-import static android.graphics.Color.YELLOW;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ConnectionReceiveJSONTask.OnJsonTransmitionCompleted, LocationListener {
     private LatLng latLng = null;
@@ -60,6 +57,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * See https://g.co/AppIndexing/AndroidStudio for more information.
      */
     private GoogleApiClient client;
+
+    private Map<Marker, User> mapAllUsersMarkers = new HashMap<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,42 +227,33 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void populateMapWithUsers(JSONArray usersData) {
-        boolean canUserGiveRide = checkUserCanGiveRide();
+        boolean canUserGiveRide = ManageUserSession.canCurrentUserGiveRides();
         for (int i = 0; i < usersData.length(); i++) {
             try {
-                JSONObject user = (JSONObject) usersData.get(i);
+                JSONObject userJson = (JSONObject) usersData.get(i);
 
-                if(ManageUserSession.isThisUserLogged(User.createUserFromJSON(user))){
+                User user = User.createUserFromJSON(userJson);
+                if(ManageUserSession.isThisUserLogged(user)){
                     // Não coloca o marcador do próprio usuário
                     continue;
                 }
-                boolean giveRide = (Boolean) user.get("canGiveRide");
-//                int vacancy = (int) user.get("vacancy");
-                int vacancy = 0; //FIXME Só para teste, pegar da carona do usuário (ou listar as caronas separado, tirando o campo vagas?)
+                boolean giveRide = (Boolean) userJson.get("canGiveRide");
 
-                LatLng userLatLng = new LatLng((Double) user.getJSONObject("location").get("latitude"), (Double) user.getJSONObject("location").get("longitude"));
+                LatLng userLatLng = new LatLng((Double) userJson.getJSONObject("location").get("latitude"), (Double) userJson.getJSONObject("location").get("longitude"));
+                MarkerOptions markerOpt = null;
                 if (giveRide) {
-                    if (vacancy > 0) {
-                        mMap.addMarker(new MarkerOptions().position(userLatLng).title(user.get("name").toString()).snippet("Vagas : " + vacancy + " - Pedir carona").icon(BitmapDescriptorFactory.fromResource(R.drawable.car_vacancy_marker)));
-                    } else {
-                        mMap.addMarker(new MarkerOptions().position(userLatLng).title(user.get("name").toString()).snippet("Lotado").icon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker)));
-                    }
+                    markerOpt = new MarkerOptions().position(userLatLng).title(userJson.get("name").toString()).snippet("Pedir carona").icon(BitmapDescriptorFactory.fromResource(R.drawable.car_vacancy_marker));
                 } else {
-                    mMap.addMarker(new MarkerOptions().position(userLatLng).title(user.get("name").toString()).snippet(canUserGiveRide ? "Oferecer carona" : "Ver perfil").icon(BitmapDescriptorFactory.fromResource(R.drawable.man_marker)));
+                    markerOpt = new MarkerOptions().position(userLatLng).title(userJson.get("name").toString()).snippet(canUserGiveRide ? "Oferecer carona" : "Ver perfil").icon(BitmapDescriptorFactory.fromResource(R.drawable.man_marker));
                 }
+                Marker marker = mMap.addMarker(markerOpt);
+                this.mapAllUsersMarkers.put(marker, user);//FIXME Testar
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
         }
 
-    }
-
-    private boolean checkUserCanGiveRide() {
-        if (this.userToRegister != null) {
-            return this.userToRegister.isCanGiveRide();
-        }
-        return false;
     }
 
     @Override

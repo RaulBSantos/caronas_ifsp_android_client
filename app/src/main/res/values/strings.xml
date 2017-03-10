@@ -83,4 +83,7 @@
     <string name="action_settings">Settings</string>
     <string name="save_ride">Salvar carona</string>
 
+    <string name="offer_ride">ofereceu uma carona</string>
+    <string name="request_ride">pediu uma carona</string>
+
 </resources>

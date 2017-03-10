@@ -10,7 +10,7 @@ public class ManageUserSession {
     /*
         Mantém informações do usu´ario logado
      */
-    private static User sessionUser;
+    private static User sessionUser = new User();
 
     public static void saveSessionUser(User sessionUser) {
         ManageUserSession.sessionUser = sessionUser;
@@ -25,6 +25,11 @@ public class ManageUserSession {
     }
 
     public static User getSessionUser() {
-        return sessionUser;
+        return ManageUserSession.sessionUser;
+    }
+
+    public static boolean canCurrentUserGiveRides() {
+        User loggedUser = ManageUserSession.getSessionUser();
+        return loggedUser.isCanGiveRide();
     }
 }
