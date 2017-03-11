@@ -63,7 +63,6 @@ public class ConnectionSendJSONTask extends AsyncTask{
         try {
 
             String response = null;
-
             URL url = new URL(AndroidUtilsCaronas.SERVER_PREFIX_CONTEXT + this.urlPath);
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 

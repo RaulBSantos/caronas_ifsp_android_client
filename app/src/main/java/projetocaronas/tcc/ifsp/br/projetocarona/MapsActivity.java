@@ -153,9 +153,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                NotificationController notificationController = new NotificationController();
-                String toOffer = Resources.getSystem().getString(R.string.to_offer);
-                String toRequest = Resources.getSystem().getString(R.string.to_request);
+                NotificationController notificationController = new NotificationController(MapsActivity.this);
+                String toOffer = getString(R.string.to_offer);
+                String toRequest = getString(R.string.to_request);
 
                 User origin = ManageUserSession.getSessionUser();
                 User destination = mapAllUsersMarkers.get(marker);

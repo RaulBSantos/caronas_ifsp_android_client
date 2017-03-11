@@ -20,7 +20,6 @@ public class RideNotification implements Serializable {
     }
 
     public User getOrigin() {
-
         return origin;
     }
 
