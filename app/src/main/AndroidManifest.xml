@@ -29,7 +29,7 @@
              Note that the API key is linked to the encryption key used to sign the APK.
              You need a different API key for each encryption key, including the release key that is used to
              sign the APK for publishing.
-             You can define the keys for the debug and release targets in src/debug/ and src/release/. 
+             You can define the keys for the debug and release targets in src/debug/ and src/release/.
         -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -37,14 +37,10 @@
 
         <activity
             android:name=".MapsActivity"
-            android:label="@string/address_register">
-
-
-
-        </activity>
+            android:label="@string/address_register"></activity>
         <activity
             android:name=".UserRegisterActivity"
-            android:label="@string/title_activity_user_register"></activity>
+            android:label="@string/title_activity_user_register" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,13 +50,10 @@
         </activity>
         <activity
             android:name=".RegisterRidesActivity"
-            android:label="@string/title_activity_rides_register">
-
-        </activity>
+            android:label="@string/title_activity_rides_register"></activity>
         <activity
             android:name=".RegisterRoutesActivity"
-            android:label="@string/title_activity_register_routes">
-        </activity>
+            android:label="@string/title_activity_register_routes"></activity>
         <activity
             android:name=".TimePickerFragment"
             android:label="@string/title_activity_time_picker_fragment"
@@ -68,31 +61,28 @@
         <activity
             android:name=".LateralMenuActivity"
             android:label="@string/title_activity_lateral_menu"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.NoActionBar"></activity>
+        <!-- Para usar o Firebase -->
 
-        </activity>
-        <!-- Para usar o Firebase-->
-
-        <service
-            android:name=".messaging.MyFirebaseMessagingService">
+        <service android:name=".messaging.MyFirebaseMessagingService">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-
-        <service
-            android:name=".messaging.MyFirebaseInstanceIdService">
+        <service android:name=".messaging.MyFirebaseInstanceIdService">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
-        </service><!-- ATTENTION: This was auto-generated to add Google Play services to your project for
-     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information. -->
+        </service>
+        <!--
+ ATTENTION: This was auto-generated to add Google Play services to your project for
+     App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
+        -->
+        <!-- Para usar o Firebase -->
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-
-        <!-- Para usar o Firebase-->
     </application>
 
 </manifest>
