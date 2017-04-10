@@ -1,5 +1,7 @@
 package projetocaronas.tcc.ifsp.br.projetocarona.entities;
 
+import android.location.Location;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -18,6 +20,7 @@ public class User implements Serializable, UserBuilder {
     private String email;
     private String firebaseId;
     private boolean canGiveRide;
+    private UserLocation location;
 
     public String getName() {
         return name;
@@ -40,6 +43,14 @@ public class User implements Serializable, UserBuilder {
     }
 
     public String getFirebaseId() { return firebaseId; }
+
+    public UserLocation getLocation() {
+        return location;
+    }
+
+    public void setLocation(UserLocation location) {
+        this.location = location;
+    }
 
     @Override
     public String toString() {
@@ -101,6 +112,12 @@ public class User implements Serializable, UserBuilder {
         this.firebaseId = fireBaseId;
         return this;
     }
+    // Informação específica de localização
+    public User withLocation(UserLocation location){
+        this.location = location;
+        return this;
+    }
+
     // Dada uma estrutura de JSON, cria um novo usuário
     public static User createUserFromJSON(JSONObject jsonUser){
         User user = new User();
@@ -128,6 +145,15 @@ public class User implements Serializable, UserBuilder {
             if (jsonUser.has("email")) {
                 String email = (String) jsonUser.get("email");
                 user.withEmail(email);
+            }
+
+            if (jsonUser.has("location")){
+                JSONObject location = (JSONObject) jsonUser.get("location");
+
+                double latitude = (double) location.get("latitude");
+                double longitude = (double) location.get("longitude");
+
+                user.withLocation(new UserLocation(latitude, longitude));
             }
 
         } catch (JSONException e) {

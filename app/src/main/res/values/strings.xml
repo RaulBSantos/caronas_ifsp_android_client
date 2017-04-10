@@ -87,6 +87,7 @@
     <string name="offer_ride">ofereceu uma carona</string>
     <string name="to_request">pedir</string>
     <string name="request_ride">pediu uma carona</string>
+    <string name="title_activity_ride_detail_maps">Map</string>
 
 
 </resources>
