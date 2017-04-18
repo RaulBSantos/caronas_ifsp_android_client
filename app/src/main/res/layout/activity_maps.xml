@@ -101,11 +101,5 @@
                 android:background="@color/buttonOk" />
 
         </fragment>
-
-
     </RelativeLayout>
-
-
-
-
 </LinearLayout>

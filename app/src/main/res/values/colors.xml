@@ -4,6 +4,8 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="lightGray">#bcbcbc</color>
     <color name="buttonOk">#3fa9f5</color>
+    <color name="buttonGreenAccept">#2aa12c</color>
+    <color name="buttonRedDecline">#e40e0e</color>
     <color name="buttonCommom">#636265</color>
     <color name="colorAccent">#FF4081</color>
     <color name="colorBackground">#b82b2b</color>

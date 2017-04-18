@@ -1,8 +1,69 @@
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:map="http://schemas.android.com/apk/res-auto"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/map"
-    android:name="com.google.android.gms.maps.SupportMapFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="projetocaronas.tcc.ifsp.br.projetocarona.RideDetailMapsActivity" />
+    android:layout_weight="12"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="@dimen/nav_header_height"
+        android:id="@+id/ride_detail_top_linear_layout"
+        android:layout_weight="4">
+
+        <TextView
+            android:id="@+id/ride_detail_title_text"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="4"
+            android:textSize="@dimen/ride_detail_header_text"
+            tools:text="Fulano está te oferecendo uma carona. Deseja confirmar?"
+            android:paddingLeft="10dp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="8">
+
+        <fragment xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/map"
+            android:name="com.google.android.gms.maps.SupportMapFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+
+            android:layout_weight="8"
+            tools:context="projetocaronas.tcc.ifsp.br.projetocarona.RideDetailMapsActivity">
+
+            <Button
+                android:id="@+id/reject_ride"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="left|bottom"
+                android:layout_margin="@dimen/minimal_padding"
+                android:layout_weight="1"
+                android:alpha="0.7"
+                android:background="@color/buttonRedDecline"
+                android:onClick="onRejectRide"
+                android:text="@string/reject"
+                android:textColor="@color/white" />
+
+            <Button
+                android:id="@+id/confirm_ride"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right|bottom"
+                android:layout_margin="@dimen/minimal_padding"
+                android:layout_weight="1"
+                android:alpha="0.7"
+                android:background="@color/buttonGreenAccept"
+                android:onClick="onConfirmRide"
+                android:text="@string/confirm"
+                android:textColor="@color/white" />
+
+        </fragment>
+    </RelativeLayout>
+</LinearLayout>

@@ -4,6 +4,8 @@ import android.nfc.Tag;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -25,6 +27,7 @@ import java.util.List;
 
 import projetocaronas.tcc.ifsp.br.projetocarona.entities.Ride;
 import projetocaronas.tcc.ifsp.br.projetocarona.entities.User;
+import projetocaronas.tcc.ifsp.br.projetocarona.enums.RIDE_ACTION;
 
 public class                                                                                                                                                                                                                                                                                                    RideDetailMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -32,6 +35,7 @@ public class                                                                    
 
     private User userSender = null; // Remetente da mensagem
     private User userRecipient = null; // Destinatário da mensagem (usuário atual)
+    private RIDE_ACTION rideAction;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,12 +60,21 @@ public class                                                                    
                         if (userRecipientJson != null){
                             this.userRecipient = User.createUserFromJSON((JSONObject) userRecipientJson.get("user_recipient"));
                         }
+                        JSONObject rideActionJson = (JSONObject) rideContent.get(2);
+                        if(rideActionJson != null){
+                            String rideAction = (String) rideActionJson.get("ride_action");
+                            this.rideAction = RIDE_ACTION.valueOf(rideAction);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
                 }
             }
         }
+
+        // Prepara texto da carona
+        TextView titleTextView = (TextView) findViewById(R.id.ride_detail_title_text);
+        titleTextView.setText(this.userSender.getName() + " está te " + (this.rideAction == RIDE_ACTION.OFFER ? "oferecendo" : "pedindo") + " uma carona. Deseja confirmar?");
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -110,6 +123,36 @@ public class                                                                    
 
 
 
+    }
+
+    /**
+     * Envia para o servidor a confirmação da carona entre os usuários
+     * @param view
+     */
+    public void onConfirmRide(View view){
+        /* Params:
+
+        id da carona?!
+        user que pediu
+        user que ofereceu
+        bater na url /caronas/confirmacao
+
+
+        */
+    }
+
+    /**
+     * Envia para o servidor que o pedido/oferta de carona foi rejeitado pelo usuário
+     * @param view
+     */
+    public void onRejectRide(View view){
+        /* Params:
+
+        id da carona?!
+        user que pediu
+        user que ofereceu
+        bater na url /caronas/rejeicao
+        */
     }
 
 

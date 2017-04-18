@@ -26,14 +26,12 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.android.support:design:23.4.0'
     compile 'com.google.maps.android:android-maps-utils:0.4.+'
-    compile 'com.google.android.gms:play-services-maps:10.0.1'
-    compile 'com.google.firebase:firebase-messaging:10.0.1'
+    compile 'com.google.android.gms:play-services-maps:9.8.0'
+    compile 'com.google.firebase:firebase-messaging:9.8.0'
     compile 'com.google.code.gson:gson:2.8.0'
     compile 'com.android.support:support-v4:23.4.0'
     compile 'com.android.support:recyclerview-v7:23.4.0'
     compile 'com.google.android.gms:play-services-appindexing:9.8.0'
-    compile 'com.google.android.gms:play-services:10.0.1'
-    testCompile 'junit:junit:4.12'
 }
 // Addicionado para o Firebase Messaging
 apply plugin: 'com.google.gms.google-services'
