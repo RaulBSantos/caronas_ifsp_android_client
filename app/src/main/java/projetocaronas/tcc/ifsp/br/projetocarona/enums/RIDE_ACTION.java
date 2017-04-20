@@ -8,5 +8,7 @@ import java.io.Serializable;
 
 public enum RIDE_ACTION implements Serializable{
     REQUEST,
-    OFFER
+    OFFER,
+    CONFIRM,
+    REJECT
 }

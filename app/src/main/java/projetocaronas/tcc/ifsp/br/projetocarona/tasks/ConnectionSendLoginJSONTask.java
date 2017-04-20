@@ -27,7 +27,7 @@ import projetocaronas.tcc.ifsp.br.projetocarona.utils.AndroidUtilsCaronas;
 /**
  * Created by Raul on 29/05/2016.
  */
-public class ConnectionSendJSONTask extends AsyncTask{
+public class ConnectionSendLoginJSONTask extends AsyncTask{
     private Activity context;
     private Activity next;
     private String urlPath;
@@ -38,7 +38,7 @@ public class ConnectionSendJSONTask extends AsyncTask{
      * @param context A activity atual
      * @param urlPath URL relativa de destino
      */
-    public ConnectionSendJSONTask(Activity context, String urlPath){
+    public ConnectionSendLoginJSONTask(Activity context, String urlPath){
         this.context = context;
         this.urlPath = urlPath;
     }
@@ -49,7 +49,7 @@ public class ConnectionSendJSONTask extends AsyncTask{
      * @param next A activity que será chamada após o o envio. Exemplo de valor: mew ExemploActivity()
      * @param urlPath URL relativa de destino
      */
-    public ConnectionSendJSONTask(Activity context, Activity next, String urlPath){
+    public ConnectionSendLoginJSONTask(Activity context, Activity next, String urlPath){
         this.context = context;
         this.next = next;
         this.urlPath = urlPath;

@@ -3,7 +3,6 @@ package projetocaronas.tcc.ifsp.br.projetocarona;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.res.Resources;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -45,7 +44,7 @@ import projetocaronas.tcc.ifsp.br.projetocarona.controllers.NotificationControll
 import projetocaronas.tcc.ifsp.br.projetocarona.entities.User;
 import projetocaronas.tcc.ifsp.br.projetocarona.session.ManageUserSession;
 import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionReceiveJSONTask;
-import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionSendJSONTask;
+import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionSendLoginJSONTask;
 import projetocaronas.tcc.ifsp.br.projetocarona.utils.AndroidUtilsCaronas;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, ConnectionReceiveJSONTask.OnJsonTransmitionCompleted, LocationListener {
@@ -218,7 +217,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             Toast.makeText(this, "Cadastro realizado, localização : Latitude: " + latLng.latitude + " Longitude: " + latLng.longitude, Toast.LENGTH_LONG).show();
             // Envia os dados, chamando a prócima activity de cadastro de caronas
-            new ConnectionSendJSONTask(MapsActivity.this, new RegisterRidesActivity(), "/register_user_and_coordinates").execute(postParameters);
+            new ConnectionSendLoginJSONTask(MapsActivity.this, new RegisterRidesActivity(), "/register_user_and_coordinates").execute(postParameters);
         } else {
             Toast.makeText(this, "Cannot read location!", Toast.LENGTH_LONG).show();
         }

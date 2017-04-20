@@ -18,7 +18,6 @@
             android:layout_height="fill_parent"
             android:layout_weight="4"
             android:textSize="@dimen/ride_detail_header_text"
-            tools:text="Fulano está te oferecendo uma carona. Deseja confirmar?"
             android:paddingLeft="10dp" />
     </LinearLayout>
 
@@ -45,7 +44,6 @@
                 android:layout_gravity="left|bottom"
                 android:layout_margin="@dimen/minimal_padding"
                 android:layout_weight="1"
-                android:alpha="0.7"
                 android:background="@color/buttonRedDecline"
                 android:onClick="onRejectRide"
                 android:text="@string/reject"
@@ -58,7 +56,6 @@
                 android:layout_gravity="right|bottom"
                 android:layout_margin="@dimen/minimal_padding"
                 android:layout_weight="1"
-                android:alpha="0.7"
                 android:background="@color/buttonGreenAccept"
                 android:onClick="onConfirmRide"
                 android:text="@string/confirm"

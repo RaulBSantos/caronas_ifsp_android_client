@@ -5,9 +5,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,8 +14,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import projetocaronas.tcc.ifsp.br.projetocarona.MapsActivity;
-import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionSendJSONTask;
+import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionSendLoginJSONTask;
 
 /**
  * Created by Raul on 11/10/2016.
@@ -36,7 +33,7 @@ public class RouteController {
      */
     public void getRouteJSON(Activity parent, List<LatLng> coordinates){
         JSONObject jsonCoordinateParam = prepareAsJsonParameters(coordinates);
-        new ConnectionSendJSONTask(parent, "/sendToDirectionsApi").execute(jsonCoordinateParam);
+        new ConnectionSendLoginJSONTask(parent, "/sendToDirectionsApi").execute(jsonCoordinateParam);
     }
 
     /**

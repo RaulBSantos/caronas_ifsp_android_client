@@ -25,9 +25,12 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import projetocaronas.tcc.ifsp.br.projetocarona.controllers.NotificationController;
 import projetocaronas.tcc.ifsp.br.projetocarona.entities.Ride;
 import projetocaronas.tcc.ifsp.br.projetocarona.entities.User;
 import projetocaronas.tcc.ifsp.br.projetocarona.enums.RIDE_ACTION;
+import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionSendAndReceiveJSONTask;
+import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionSendJsonTask;
 
 public class                                                                                                                                                                                                                                                                                                    RideDetailMapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
@@ -120,9 +123,6 @@ public class                                                                    
                 Toast.makeText(RideDetailMapsActivity.this, "Distância de " + distanceBetween + "m", Toast.LENGTH_LONG);
             }
         });
-
-
-
     }
 
     /**
@@ -130,15 +130,9 @@ public class                                                                    
      * @param view
      */
     public void onConfirmRide(View view){
-        /* Params:
-
-        id da carona?!
-        user que pediu
-        user que ofereceu
-        bater na url /caronas/confirmacao
-
-
-        */
+        NotificationController notificationController = new NotificationController(RideDetailMapsActivity.this);
+        // Resposta a notificação anterior. Invertem-se os paéis de usuários
+        notificationController.sendRideConfirm(this.userRecipient, this.userSender);
     }
 
     /**
@@ -146,14 +140,9 @@ public class                                                                    
      * @param view
      */
     public void onRejectRide(View view){
-        /* Params:
-
-        id da carona?!
-        user que pediu
-        user que ofereceu
-        bater na url /caronas/rejeicao
-        */
+        NotificationController notificationController = new NotificationController(RideDetailMapsActivity.this);
+        // Resposta a notificação anterior. Invertem-se os paéis de usuários
+        notificationController.sendRideReject(this.userRecipient, this.userSender);
     }
-
-
 }
+

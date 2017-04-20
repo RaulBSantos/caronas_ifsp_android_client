@@ -14,10 +14,8 @@ import android.widget.TextView;
 
 import com.google.gson.Gson;
 
-import org.json.JSONObject;
-
 import projetocaronas.tcc.ifsp.br.projetocarona.entities.Ride;
-import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionSendJSONTask;
+import projetocaronas.tcc.ifsp.br.projetocarona.tasks.ConnectionSendLoginJSONTask;
 import projetocaronas.tcc.ifsp.br.projetocarona.utils.AndroidUtilsCaronas;
 import projetocaronas.tcc.ifsp.br.projetocarona.utils.Mask;
 
@@ -186,7 +184,7 @@ public class RegisterRidesActivity extends AppCompatActivity {
 
 
         // Envia para o controller
-        new ConnectionSendJSONTask(RegisterRidesActivity.this, new MapsActivity(), "/register_ride").execute(stringfiedJson);
+        new ConnectionSendLoginJSONTask(RegisterRidesActivity.this, new MapsActivity(), "/register_ride").execute(stringfiedJson);
 
         /*
         *
