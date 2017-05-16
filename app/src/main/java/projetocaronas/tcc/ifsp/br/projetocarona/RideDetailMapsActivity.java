@@ -133,6 +133,7 @@ public class                                                                    
         NotificationController notificationController = new NotificationController(RideDetailMapsActivity.this);
         // Resposta a notificação anterior. Invertem-se os paéis de usuários
         notificationController.sendRideConfirm(this.userRecipient, this.userSender);
+        this.finish();
     }
 
     /**
@@ -143,6 +144,7 @@ public class                                                                    
         NotificationController notificationController = new NotificationController(RideDetailMapsActivity.this);
         // Resposta a notificação anterior. Invertem-se os paéis de usuários
         notificationController.sendRideReject(this.userRecipient, this.userSender);
+        this.finish();
     }
 }
 

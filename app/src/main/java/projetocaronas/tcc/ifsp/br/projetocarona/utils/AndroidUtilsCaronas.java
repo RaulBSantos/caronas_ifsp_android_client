@@ -23,7 +23,7 @@ import java.util.List;
  * Created by Raul on 26/05/2016.
  */
 public class AndroidUtilsCaronas {
-    public final static String SERVER_PREFIX_CONTEXT = "https://caronas-ifsp.tk:8080/caronas";
+    public final static String SERVER_PREFIX_CONTEXT = "https://caronas-ifsp.ml:8080/caronas";
 
     /**
      * Métodos: validarEditText, DesaparecerTeclado

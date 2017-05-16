@@ -28,6 +28,7 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -60,6 +61,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleApiClient client;
 
     private Map<Marker, User> mapAllUsersMarkers = new HashMap<>();
+    // Cria o limite
+    private LatLngBounds.Builder boundsBuilder = new LatLngBounds.Builder();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -248,6 +252,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 User user = User.createUserFromJSON(userJson);
                 if(ManageUserSession.isThisUserLogged(user)){
                     // Não coloca o marcador do próprio usuário
+                    double selfLatitude = user.getLocation().getLatitude();
+                    double selfLongitude = user.getLocation().getLongitude();
+                    this.boundsBuilder.include(new LatLng(selfLatitude, selfLongitude));
                     continue;
                 }
                 boolean giveRide = (Boolean) userJson.get("canGiveRide");
@@ -261,12 +268,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
                 Marker marker = mMap.addMarker(markerOpt);
                 this.mapAllUsersMarkers.put(marker, user);//FIXME Testar
+
+                this.boundsBuilder.include(userLatLng);
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
 
         }
 
+        // Reposiciona
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 100));
     }
 
     @Override
