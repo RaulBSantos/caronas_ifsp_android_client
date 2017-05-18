@@ -1,7 +1,9 @@
 package projetocaronas.tcc.ifsp.br.projetocarona;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Criteria;
@@ -53,6 +55,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private GoogleMap mMap;
     private User userToRegister = null;
     private JSONArray usersData = null;
+    private String pendingRides;
     private boolean gotUserPosition = false; //FIXME Precisa ser estático? Em quais situações será instanciada uma nova classe?
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -71,6 +74,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // Obtains user from UserRegisterActivity
         Intent intent = getIntent();
         userToRegister = (User) intent.getSerializableExtra("newUser");
+        // Reads pending rides information
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        this.pendingRides = sharedPref.getString(getString(R.string.pending_rides_to_me), "");
 
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -189,7 +195,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }else{
             marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.man_marker_pending_ride));
         }
+        savePendingRide(marker);
         marker.setSnippet(getString(R.string.maps_waiting_confirm_ride));
+    }
+
+    private void savePendingRide(Marker marker){
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        String prefContent = sharedPref.getString(getString(R.string.pending_rides_to_me), "");
+        prefContent += (prefContent.length() == 0 ? "" : ", ") + this.mapAllUsersMarkers.get(marker).getRecord();
+        editor.putString(getString(R.string.pending_rides_to_me), prefContent );
+        editor.commit();
     }
 
 
@@ -285,9 +301,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 } else {
                     markerOpt = new MarkerOptions().position(userLatLng).title(userJson.get("name").toString()).snippet(canUserGiveRide ? getString(R.string.maps_offer_ride) : getString(R.string.maps_see_profile)).icon(BitmapDescriptorFactory.fromResource(R.drawable.man_marker));
                 }
+
                 Marker marker = mMap.addMarker(markerOpt);
                 this.mapAllUsersMarkers.put(marker, user);
-                // Add mapMyRidesMarkers.
+                // Verify pendding - Needs mapAllUsersMarkers filled
+                if (this.pendingRides.contains(user.getRecord())){
+                    changeMarkerToPending(marker);
+                }
 
                 this.boundsBuilder.include(userLatLng);
 

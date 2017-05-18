@@ -97,6 +97,7 @@
     <string name="maps_ask_ride">Pedir carona</string>
     <string name="maps_offer_ride">Oferecer carona</string>
     <string name="maps_see_profile">Ver perfil</string>
+    <string name="pending_rides_to_me">caronas pendentes para mim</string>
 
 
 </resources>
