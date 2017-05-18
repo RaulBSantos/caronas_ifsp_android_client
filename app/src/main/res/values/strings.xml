@@ -91,6 +91,12 @@
     <string name="title_activity_ride_detail_maps">Map</string>
     <string name="confirm">Confirmar</string>
     <string name="reject">Recusar</string>
+    <string name="maps_my_rides">Minhas Caronas</string>
+    <string name="maps_all_rides">Todas</string>
+    <string name="maps_waiting_confirm_ride">Aguardando confirmação de carona</string>
+    <string name="maps_ask_ride">Pedir carona</string>
+    <string name="maps_offer_ride">Oferecer carona</string>
+    <string name="maps_see_profile">Ver perfil</string>
 
 
 </resources>

@@ -73,6 +73,37 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
+            <!-- Container dos botoes laterais -->
+            <LinearLayout
+                android:id="@+id/maps_lateral_buttons_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_gravity="left"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/maps_my_rides"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:text="@string/maps_my_rides"
+                    android:layout_weight="1"
+                    android:alpha="0.7"
+                    android:layout_margin="@dimen/minimal_padding"
+                    android:background="@color/buttonCommom"/>
+                <Button
+                    android:id="@+id/maps_all_rides"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:text="@string/maps_all_rides"
+                    android:layout_weight="1"
+                    android:alpha="0.7"
+                    android:layout_margin="@dimen/minimal_padding"
+                    android:background="@color/buttonCommom"/>
+
+            </LinearLayout>
 
             <Button
                 android:id="@+id/backToUserRegister"

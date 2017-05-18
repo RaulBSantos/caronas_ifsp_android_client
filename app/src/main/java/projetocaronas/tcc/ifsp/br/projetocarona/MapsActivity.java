@@ -156,23 +156,42 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
             @Override
             public void onInfoWindowClick(Marker marker) {
-                NotificationController notificationController = new NotificationController(MapsActivity.this);
-                String toOffer = getString(R.string.to_offer);
-                String toRequest = getString(R.string.to_request);
+                if (! marker.getSnippet().equals(getString(R.string.maps_waiting_confirm_ride))) {
+                    NotificationController notificationController = new NotificationController(MapsActivity.this);
+                    String toOffer = getString(R.string.to_offer);
+                    String toRequest = getString(R.string.to_request);
 
-                User origin = ManageUserSession.getSessionUser();
-                User destination = mapAllUsersMarkers.get(marker);
+                    User origin = ManageUserSession.getSessionUser();
+                    User destination = mapAllUsersMarkers.get(marker);
 
-                if (marker.getSnippet().toLowerCase().contains(toOffer)){
-                    notificationController.sendRideOffer(origin, destination);
-                }else if (marker.getSnippet().toLowerCase().contains(toRequest)){
-                    notificationController.sendRideRequest(origin, destination);
+                    if (marker.getSnippet().toLowerCase().contains(toOffer)) {
+                        notificationController.sendRideOffer(origin, destination);
+                    } else if (marker.getSnippet().toLowerCase().contains(toRequest)) {
+                        notificationController.sendRideRequest(origin, destination);
+                    }
+                    changeMarkerToPending(marker);
+                    // Deixa Marker Amarelo
+                    // O click exibe outra mensagem ?
+                    // Não deixa pedir novamente
+                    // Salva no Shared Preference
+                    Toast.makeText(MapsActivity.this, "Mensagem de : " + origin.getName() + " para " + destination.getName() + " foi enviada! ", Toast.LENGTH_SHORT).show();//TODO  Call activity Confirma carona
+                }else{
+                    Toast.makeText(MapsActivity.this, "Aguarde a confirmação da carona!", Toast.LENGTH_SHORT).show();//TODO  Call activity Confirma carona
                 }
-                Toast.makeText(MapsActivity.this, "Mensagem de : "+origin.getName() +" para "+ destination.getName() + " foi enviada! ", Toast.LENGTH_SHORT).show();//TODO  Call activity Confirma carona
             }
         });
 
     }
+
+    private void changeMarkerToPending(Marker marker) {
+        if (marker.getSnippet().equals(getString(R.string.maps_ask_ride))){
+            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker_pending_ride));
+        }else{
+            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.man_marker_pending_ride));
+        }
+        marker.setSnippet(getString(R.string.maps_waiting_confirm_ride));
+    }
+
 
     public void onSearch(View view) {
         hideKeyboardFromUtils(view);
@@ -262,12 +281,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 LatLng userLatLng = new LatLng((Double) userJson.getJSONObject("location").get("latitude"), (Double) userJson.getJSONObject("location").get("longitude"));
                 MarkerOptions markerOpt = null;
                 if (giveRide) {
-                    markerOpt = new MarkerOptions().position(userLatLng).title(userJson.get("name").toString()).snippet("Pedir carona").icon(BitmapDescriptorFactory.fromResource(R.drawable.car_vacancy_marker));
+                    markerOpt = new MarkerOptions().position(userLatLng).title(userJson.get("name").toString()).snippet(getString(R.string.maps_ask_ride)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_vacancy_marker));
                 } else {
-                    markerOpt = new MarkerOptions().position(userLatLng).title(userJson.get("name").toString()).snippet(canUserGiveRide ? "Oferecer carona" : "Ver perfil").icon(BitmapDescriptorFactory.fromResource(R.drawable.man_marker));
+                    markerOpt = new MarkerOptions().position(userLatLng).title(userJson.get("name").toString()).snippet(canUserGiveRide ? getString(R.string.maps_offer_ride) : getString(R.string.maps_see_profile)).icon(BitmapDescriptorFactory.fromResource(R.drawable.man_marker));
                 }
                 Marker marker = mMap.addMarker(markerOpt);
-                this.mapAllUsersMarkers.put(marker, user);//FIXME Testar
+                this.mapAllUsersMarkers.put(marker, user);
+                // Add mapMyRidesMarkers.
 
                 this.boundsBuilder.include(userLatLng);
 
