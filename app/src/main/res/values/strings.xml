@@ -98,6 +98,7 @@
     <string name="maps_offer_ride">Oferecer carona</string>
     <string name="maps_see_profile">Ver perfil</string>
     <string name="pending_rides_to_me">caronas pendentes para mim</string>
+    <string name="maps_cancel_ride">Carona ativa. Deseja cancelar a carona?</string>
 
 
 </resources>

@@ -56,6 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private User userToRegister = null;
     private JSONArray usersData = null;
     private String pendingRides;
+    private JSONArray confirmedRides = null;
     private boolean gotUserPosition = false; //FIXME Precisa ser estático? Em quais situações será instanciada uma nova classe?
     /**
      * ATTENTION: This was auto-generated to implement the App Indexing API.
@@ -166,6 +167,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     NotificationController notificationController = new NotificationController(MapsActivity.this);
                     String toOffer = getString(R.string.to_offer);
                     String toRequest = getString(R.string.to_request);
+                    String toCancel = getString(R.string.maps_cancel_ride);
 
                     User origin = ManageUserSession.getSessionUser();
                     User destination = mapAllUsersMarkers.get(marker);
@@ -174,12 +176,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         notificationController.sendRideOffer(origin, destination);
                     } else if (marker.getSnippet().toLowerCase().contains(toRequest)) {
                         notificationController.sendRideRequest(origin, destination);
+                    } else if (marker.getSnippet().toLowerCase().contains(toCancel)){
+                        Toast.makeText(MapsActivity.this, "Cancelar carona ainda não permitido.", Toast.LENGTH_SHORT).show();
+                        return ;
                     }
                     changeMarkerToPending(marker);
-                    // Deixa Marker Amarelo
-                    // O click exibe outra mensagem ?
-                    // Não deixa pedir novamente
-                    // Salva no Shared Preference
                     Toast.makeText(MapsActivity.this, "Mensagem de : " + origin.getName() + " para " + destination.getName() + " foi enviada! ", Toast.LENGTH_SHORT).show();//TODO  Call activity Confirma carona
                 }else{
                     Toast.makeText(MapsActivity.this, "Aguarde a confirmação da carona!", Toast.LENGTH_SHORT).show();//TODO  Call activity Confirma carona
@@ -188,26 +189,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
     }
-
-    private void changeMarkerToPending(Marker marker) {
-        if (marker.getSnippet().equals(getString(R.string.maps_ask_ride))){
-            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker_pending_ride));
-        }else{
-            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.man_marker_pending_ride));
-        }
-        savePendingRide(marker);
-        marker.setSnippet(getString(R.string.maps_waiting_confirm_ride));
-    }
-
-    private void savePendingRide(Marker marker){
-        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
-        String prefContent = sharedPref.getString(getString(R.string.pending_rides_to_me), "");
-        prefContent += (prefContent.length() == 0 ? "" : ", ") + this.mapAllUsersMarkers.get(marker).getRecord();
-        editor.putString(getString(R.string.pending_rides_to_me), prefContent );
-        editor.commit();
-    }
-
 
     public void onSearch(View view) {
         hideKeyboardFromUtils(view);
@@ -238,6 +219,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+
     public void hideKeyboardFromUtils(View view) {
         AndroidUtilsCaronas.hideKeyboard(this);
     }
@@ -255,8 +237,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
 
             Toast.makeText(this, "Cadastro realizado, localização : Latitude: " + latLng.latitude + " Longitude: " + latLng.longitude, Toast.LENGTH_LONG).show();
-            // Envia os dados, chamando a prócima activity de cadastro de caronas
-            new ConnectionSendLoginJSONTask(MapsActivity.this, new RegisterRidesActivity(), "/register_user_and_coordinates").execute(postParameters);
+            // Envia os dados, chamando a prócima activity de cadastro de caronas - FIXME voltar quando implementar os detalhes da carona
+            //new ConnectionSendLoginJSONTask(MapsActivity.this, new RegisterRidesActivity(), "/register_user_and_coordinates").execute(postParameters);
         } else {
             Toast.makeText(this, "Cannot read location!", Toast.LENGTH_LONG).show();
         }
@@ -280,13 +262,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void populateMapWithUsers(JSONArray usersData) {
         boolean canUserGiveRide = ManageUserSession.canCurrentUserGiveRides();
-        for (int i = 0; i < usersData.length(); i++) {
+        for (int i = 0; i < usersData.length(); i++)
             try {
                 JSONObject userJson = (JSONObject) usersData.get(i);
 
                 User user = User.createUserFromJSON(userJson);
-                if(ManageUserSession.isThisUserLogged(user)){
-                    // Não coloca o marcador do próprio usuário
+                if (ManageUserSession.isThisUserLogged(user)) {
+                    // Sets rides from current user
+                    confirmedRides = userJson.getJSONArray("confirmedRides");
+                    // Don't draw marker for own user
                     double selfLatitude = user.getLocation().getLatitude();
                     double selfLongitude = user.getLocation().getLongitude();
                     this.boundsBuilder.include(new LatLng(selfLatitude, selfLongitude));
@@ -304,9 +288,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
                 Marker marker = mMap.addMarker(markerOpt);
                 this.mapAllUsersMarkers.put(marker, user);
-                // Verify pendding - Needs mapAllUsersMarkers filled
-                if (this.pendingRides.contains(user.getRecord())){
-                    changeMarkerToPending(marker);
+                // Verify confirmed ride
+                if (this.confirmedRides != null && this.confirmedRides.length() >0) {
+                    if (! changeMarkerToConfirmed(user, marker)){
+                        // Verify pendding - Needs mapAllUsersMarkers filled
+                        if (this.pendingRides.contains(user.getRecord())) {
+                            changeMarkerToPending(marker);
+                        }
+                    }
                 }
 
                 this.boundsBuilder.include(userLatLng);
@@ -315,25 +304,63 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 e.printStackTrace();
             }
 
-        }
-
         // Reposiciona
+
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 100));
+    }
+
+    private boolean changeMarkerToConfirmed(User user, Marker marker) throws JSONException {
+        // User está no confirmedRides?
+        for (int i = 0 ; i < this.confirmedRides.length() ; i++){
+            JSONObject rideJson = this.confirmedRides.getJSONObject(i);
+            User rideUser = User.createUserFromJSON(this.confirmedRides.getJSONObject(i).getJSONObject("user"));
+            if (user.getRecord().equals(rideUser.getRecord())){
+                if(rideJson.getBoolean("driver")){
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker_confirmed));
+                }else{
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.man_marker_confirmed));
+                }
+                marker.setSnippet(getString(R.string.maps_cancel_ride));
+                return true;
+            }
+        }
+        return false;
+        // se sim, muda a cor e o snippet (remove do preferences tbm)
+    }
+
+    private void changeMarkerToPending(Marker marker) {
+        if (marker.getSnippet().equals(getString(R.string.maps_ask_ride))){
+            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker_pending_ride));
+        }else{
+            marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.man_marker_pending_ride));
+        }
+        // Persists on preferences
+        savePendingRide(marker);
+        marker.setSnippet(getString(R.string.maps_waiting_confirm_ride));
+    }
+
+    private void savePendingRide(Marker marker){
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        String prefContent = sharedPref.getString(getString(R.string.pending_rides_to_me), "");
+        prefContent += (prefContent.length() == 0 ? "" : ", ") + this.mapAllUsersMarkers.get(marker).getRecord();
+        editor.putString(getString(R.string.pending_rides_to_me), prefContent );
+        editor.commit();
     }
 
     @Override
     public void onProviderEnabled(String s) {
-        // Para utilizar LocationListener
+        // To use LocationListener - Don't remove!
     }
 
     @Override
     public void onProviderDisabled(String s) {
-        // Para utilizar LocationListener
+        // To use LocationListener - Don't remove!
     }
 
     @Override
     public void onStatusChanged(String s, int i, Bundle bundle) {
-        // Para utilizar LocationListener
+        // To use LocationListener - Don't remove!
     }
 
     /**

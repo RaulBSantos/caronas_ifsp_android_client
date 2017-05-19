@@ -32,10 +32,6 @@ public class LoginActivity extends AppCompatActivity implements ConnectionSendAn
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        //FIXME Teste do Firebase
-//        MyFirebaseMessagingService teste = new MyFirebaseMessagingService();
-
-
         buttonQuit = (Button) findViewById(R.id.buttonQuit);
         buttonLogin =  (Button) findViewById(R.id.buttonLogin);
 
@@ -102,10 +98,8 @@ public class LoginActivity extends AppCompatActivity implements ConnectionSendAn
         ManageUserSession userSession = new ManageUserSession();
         JSONObject jsonUser = null;
         try {
-            // Extrai o objeto Usuário do JSON
             jsonUser = (JSONObject) jsonResponse.get("user");
             User sessionUser =  User.createUserFromJSON(jsonUser);
-            // Salva dados do usuário logado
             userSession.saveSessionUser(sessionUser);
         } catch (JSONException e) {
             e.printStackTrace();
