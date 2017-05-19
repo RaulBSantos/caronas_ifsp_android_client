@@ -91,7 +91,8 @@
                     android:layout_weight="1"
                     android:alpha="0.7"
                     android:layout_margin="@dimen/minimal_padding"
-                    android:background="@color/buttonCommom"/>
+                    android:background="@color/buttonCommom"
+                    android:onClick="onShowMyRides" />
                 <Button
                     android:id="@+id/maps_all_rides"
                     android:layout_width="wrap_content"
@@ -101,7 +102,8 @@
                     android:layout_weight="1"
                     android:alpha="0.7"
                     android:layout_margin="@dimen/minimal_padding"
-                    android:background="@color/buttonCommom"/>
+                    android:background="@color/buttonCommom"
+                    android:onClick="onShowAllRides" />
 
             </LinearLayout>
 

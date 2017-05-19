@@ -224,6 +224,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         AndroidUtilsCaronas.hideKeyboard(this);
     }
 
+    public void onShowMyRides(View view){
+        this.mMap.clear();
+        populateMapWithUsers(this.confirmedRides);
+    }
+
+    public void onShowAllRides(View view){
+        this.mMap.clear();
+        populateMapWithUsers(this.usersData);
+    }
+
     public void onSaveLocation(View view) {
         if (latLng != null) {
 
