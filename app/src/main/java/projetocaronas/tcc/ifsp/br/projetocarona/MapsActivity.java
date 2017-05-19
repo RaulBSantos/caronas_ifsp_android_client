@@ -176,7 +176,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         notificationController.sendRideOffer(origin, destination);
                     } else if (marker.getSnippet().toLowerCase().contains(toRequest)) {
                         notificationController.sendRideRequest(origin, destination);
-                    } else if (marker.getSnippet().toLowerCase().contains(toCancel)){
+                    } else if (marker.getSnippet().equals(toCancel)){
                         Toast.makeText(MapsActivity.this, "Cancelar carona ainda não permitido.", Toast.LENGTH_SHORT).show();
                         return ;
                     }
@@ -262,14 +262,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void populateMapWithUsers(JSONArray usersData) {
         boolean canUserGiveRide = ManageUserSession.canCurrentUserGiveRides();
-        for (int i = 0; i < usersData.length(); i++)
+
+        for (int i = 0; i < usersData.length(); i++) {
+            try {
+                JSONObject userJson = (JSONObject) usersData.get(i);
+                User user = User.createUserFromJSON(userJson);
+                if (ManageUserSession.isThisUserLogged(user)) {
+                    // Sets rides from current user
+                    this.confirmedRides = userJson.getJSONArray("confirmedRides");
+                }
+            }catch (JSONException e){
+                e.printStackTrace();
+            }
+        }
+
+
+        for (int i = 0; i < usersData.length(); i++) {
             try {
                 JSONObject userJson = (JSONObject) usersData.get(i);
 
                 User user = User.createUserFromJSON(userJson);
                 if (ManageUserSession.isThisUserLogged(user)) {
-                    // Sets rides from current user
-                    confirmedRides = userJson.getJSONArray("confirmedRides");
                     // Don't draw marker for own user
                     double selfLatitude = user.getLocation().getLatitude();
                     double selfLongitude = user.getLocation().getLongitude();
@@ -289,8 +302,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Marker marker = mMap.addMarker(markerOpt);
                 this.mapAllUsersMarkers.put(marker, user);
                 // Verify confirmed ride
-                if (this.confirmedRides != null && this.confirmedRides.length() >0) {
-                    if (! changeMarkerToConfirmed(user, marker)){
+                if (this.confirmedRides != null && this.confirmedRides.length() > 0) {
+                    if (!changeMarkerToConfirmed(user, marker)) {
                         // Verify pendding - Needs mapAllUsersMarkers filled
                         if (this.pendingRides.contains(user.getRecord())) {
                             changeMarkerToPending(marker);
@@ -303,9 +316,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+        }
 
-        // Reposiciona
-
+        // Move camera
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 100));
     }
 
@@ -315,10 +328,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             JSONObject rideJson = this.confirmedRides.getJSONObject(i);
             User rideUser = User.createUserFromJSON(this.confirmedRides.getJSONObject(i).getJSONObject("user"));
             if (user.getRecord().equals(rideUser.getRecord())){
+                // Refers to 'amIDriver' condition
                 if(rideJson.getBoolean("driver")){
-                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker_confirmed));
-                }else{
                     marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.man_marker_confirmed));
+                }else{
+                    marker.setIcon(BitmapDescriptorFactory.fromResource(R.drawable.car_marker_confirmed));
                 }
                 marker.setSnippet(getString(R.string.maps_cancel_ride));
                 return true;
