@@ -226,6 +226,26 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void onShowMyRides(View view){
         this.mMap.clear();
+        JSONArray usersRideData = new JSONArray();
+        try {
+            JSONObject userJson = null;
+            JSONObject rideJson = null;
+            User rideUser = null;
+            User user = null;
+            for (int i = 0 ; i < this.usersData.length() ; i++){
+                userJson = (JSONObject) this.usersData.get(i);
+                user = User.createUserFromJSON(userJson);
+                for (int j = 0 ; j < this.confirmedRides.length() ; j++){
+                    rideUser = User.createUserFromJSON(this.confirmedRides.getJSONObject(j).getJSONObject("user"));
+                    if (user.getRecord().equals(rideUser.getRecord())){
+                        usersRideData.put(this.usersData.get(i));
+                    }
+                }
+            }
+            populateMapWithUsers(usersRideData);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         populateMapWithUsers(this.confirmedRides);
     }
 
@@ -250,7 +270,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // Envia os dados, chamando a prócima activity de cadastro de caronas - FIXME voltar quando implementar os detalhes da carona
             //new ConnectionSendLoginJSONTask(MapsActivity.this, new RegisterRidesActivity(), "/register_user_and_coordinates").execute(postParameters);
         } else {
-            Toast.makeText(this, "Cannot read location!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Impossível obter localização! Pesquise o  endereço", Toast.LENGTH_LONG).show();
         }
     }
 
@@ -327,7 +347,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 e.printStackTrace();
             }
         }
-
         // Move camera
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 100));
     }
