@@ -268,7 +268,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             Toast.makeText(this, "Cadastro realizado, localização : Latitude: " + latLng.latitude + " Longitude: " + latLng.longitude, Toast.LENGTH_LONG).show();
             // Envia os dados, chamando a prócima activity de cadastro de caronas - FIXME voltar quando implementar os detalhes da carona
-            //new ConnectionSendLoginJSONTask(MapsActivity.this, new RegisterRidesActivity(), "/register_user_and_coordinates").execute(postParameters);
+            new ConnectionSendLoginJSONTask(MapsActivity.this, MapsActivity.this, "/register_user_and_coordinates").execute(postParameters);
         } else {
             Toast.makeText(this, "Impossível obter localização! Pesquise o  endereço", Toast.LENGTH_LONG).show();
         }
@@ -291,64 +291,67 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     public void populateMapWithUsers(JSONArray usersData) {
-        boolean canUserGiveRide = ManageUserSession.canCurrentUserGiveRides();
 
-        for (int i = 0; i < usersData.length(); i++) {
-            try {
-                JSONObject userJson = (JSONObject) usersData.get(i);
-                User user = User.createUserFromJSON(userJson);
-                if (ManageUserSession.isThisUserLogged(user)) {
-                    // Sets rides from current user
-                    this.confirmedRides = userJson.getJSONArray("confirmedRides");
+        if (usersData.length() > 0) {
+            boolean canUserGiveRide = ManageUserSession.canCurrentUserGiveRides();
+
+            for (int i = 0; i < usersData.length(); i++) {
+                try {
+                    JSONObject userJson = (JSONObject) usersData.get(i);
+                    User user = User.createUserFromJSON(userJson);
+                    if (ManageUserSession.isThisUserLogged(user)) {
+                        // Sets rides from current user
+                        this.confirmedRides = userJson.getJSONArray("confirmedRides");
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-            }catch (JSONException e){
-                e.printStackTrace();
             }
-        }
 
 
-        for (int i = 0; i < usersData.length(); i++) {
-            try {
-                JSONObject userJson = (JSONObject) usersData.get(i);
+            for (int i = 0; i < usersData.length(); i++) {
+                try {
+                    JSONObject userJson = (JSONObject) usersData.get(i);
 
-                User user = User.createUserFromJSON(userJson);
-                if (ManageUserSession.isThisUserLogged(user)) {
-                    // Don't draw marker for own user
-                    double selfLatitude = user.getLocation().getLatitude();
-                    double selfLongitude = user.getLocation().getLongitude();
-                    this.boundsBuilder.include(new LatLng(selfLatitude, selfLongitude));
-                    continue;
-                }
-                boolean giveRide = (Boolean) userJson.get("canGiveRide");
+                    User user = User.createUserFromJSON(userJson);
+                    if (ManageUserSession.isThisUserLogged(user)) {
+                        // Don't draw marker for own user
+                        double selfLatitude = user.getLocation().getLatitude();
+                        double selfLongitude = user.getLocation().getLongitude();
+                        this.boundsBuilder.include(new LatLng(selfLatitude, selfLongitude));
+                        continue;
+                    }
+                    boolean giveRide = (Boolean) userJson.get("canGiveRide");
 
-                LatLng userLatLng = new LatLng((Double) userJson.getJSONObject("location").get("latitude"), (Double) userJson.getJSONObject("location").get("longitude"));
-                MarkerOptions markerOpt = null;
-                if (giveRide) {
-                    markerOpt = new MarkerOptions().position(userLatLng).title(userJson.get("name").toString()).snippet(getString(R.string.maps_ask_ride)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_vacancy_marker));
-                } else {
-                    markerOpt = new MarkerOptions().position(userLatLng).title(userJson.get("name").toString()).snippet(canUserGiveRide ? getString(R.string.maps_offer_ride) : getString(R.string.maps_see_profile)).icon(BitmapDescriptorFactory.fromResource(R.drawable.man_marker));
-                }
+                    LatLng userLatLng = new LatLng((Double) userJson.getJSONObject("location").get("latitude"), (Double) userJson.getJSONObject("location").get("longitude"));
+                    MarkerOptions markerOpt = null;
+                    if (giveRide) {
+                        markerOpt = new MarkerOptions().position(userLatLng).title(userJson.get("name").toString()).snippet(getString(R.string.maps_ask_ride)).icon(BitmapDescriptorFactory.fromResource(R.drawable.car_vacancy_marker));
+                    } else {
+                        markerOpt = new MarkerOptions().position(userLatLng).title(userJson.get("name").toString()).snippet(canUserGiveRide ? getString(R.string.maps_offer_ride) : getString(R.string.maps_see_profile)).icon(BitmapDescriptorFactory.fromResource(R.drawable.man_marker));
+                    }
 
-                Marker marker = mMap.addMarker(markerOpt);
-                this.mapAllUsersMarkers.put(marker, user);
-                // Verify confirmed ride
-                if (this.confirmedRides != null && this.confirmedRides.length() > 0) {
-                    if (!changeMarkerToConfirmed(user, marker)) {
-                        // Verify pendding - Needs mapAllUsersMarkers filled
-                        if (this.pendingRides.contains(user.getRecord())) {
-                            changeMarkerToPending(marker);
+                    Marker marker = mMap.addMarker(markerOpt);
+                    this.mapAllUsersMarkers.put(marker, user);
+                    // Verify confirmed ride
+                    if (this.confirmedRides != null && this.confirmedRides.length() > 0) {
+                        if (!changeMarkerToConfirmed(user, marker)) {
+                            // Verify pendding - Needs mapAllUsersMarkers filled
+                            if (this.pendingRides.contains(user.getRecord())) {
+                                changeMarkerToPending(marker);
+                            }
                         }
                     }
+
+                    this.boundsBuilder.include(userLatLng);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
                 }
-
-                this.boundsBuilder.include(userLatLng);
-
-            } catch (JSONException e) {
-                e.printStackTrace();
             }
+            // Move camera
+            mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 100));
         }
-        // Move camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundsBuilder.build(), 100));
     }
 
     private boolean changeMarkerToConfirmed(User user, Marker marker) throws JSONException {
